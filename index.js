@@ -131,7 +131,29 @@ function promptUserNextStep() {
                     break;
             }
         })
-}
+};
+
+// function to create an engineer
+function createEngineer() {
+    inquirer.prompt(engineerQuestions)
+        .then(engineerData => {
+            // create your engineer
+            const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
+            theFinalTeam.push(engineer);
+            promptUserNextStep();
+        })
+};
+
+// function to create intern
+function createIntern() {
+    inquirer.prompt(internQuestions)
+        .then(internData => {
+            // create your engineer
+            const intern = new Intern(internData.name, internData.id, internData.email, internData.school);
+            theFinalTeam.push(intern);
+            promptUserNextStep();
+        })
+};
 
 // function to initialize program
 function init() {
