@@ -94,3 +94,23 @@ const internQuestions = [
         message: 'Enter the name of your school:',
     },
 ]
+
+// function to create a manager
+function createManager() {
+    inquirer
+        .prompt(managerQuestions)
+        .then((managerData) => {
+            // create a manager
+            const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
+        })
+        .catch(err => {
+            console.log('Error!!', err);
+        })
+};
+
+// function to initialize program
+function init() {
+    createManager();
+};
+
+init();
