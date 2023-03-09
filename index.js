@@ -9,7 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
-
+const finalTeam = [];
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
@@ -102,11 +102,36 @@ function createManager() {
         .then((managerData) => {
             // create a manager
             const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
+            // push manager to final team array
+            finalTeam.push(manager);
+            promptUserNextStep()
         })
         .catch(err => {
             console.log('Error!!', err);
         })
 };
+
+function promptUserNextStep() {
+    // ask whether to create an engineer, intern or build the team
+    return inquirer.prompt(selectNextChoice)
+        .then(userSelection => {
+            // switch statement prompts a set of question or writes the html file depending on choice made
+            switch (userSelection.choice) {
+                case "Add an engineer":
+                    // prompts a set of questions for an engineer
+                    createEngineer();
+                    break;
+                case "Add an intern":
+                    // prompts a set of questions for an intern
+                    createIntern();
+                    break;
+                default:
+                    // writes html file when the user finishes building their team
+                    // passes final team to the render import
+                    break;
+            }
+        })
+}
 
 // function to initialize program
 function init() {
