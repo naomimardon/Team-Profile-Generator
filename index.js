@@ -9,6 +9,8 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
+
+// empty array to push employee objects to and pass to render import
 const finalTeam = [];
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
@@ -128,6 +130,7 @@ function promptUserNextStep() {
                 default:
                     // writes html file when the user finishes building their team
                     // passes final team to the render import
+                    writeToFile(outputPath, render(finalTeam));
                     break;
             }
         })
@@ -139,7 +142,7 @@ function createEngineer() {
         .then(engineerData => {
             // create your engineer
             const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
-            theFinalTeam.push(engineer);
+            finalTeam.push(engineer);
             promptUserNextStep();
         })
 };
@@ -150,9 +153,16 @@ function createIntern() {
         .then(internData => {
             // create your engineer
             const intern = new Intern(internData.name, internData.id, internData.email, internData.school);
-            theFinalTeam.push(intern);
+            finalTeam.push(intern);
             promptUserNextStep();
         })
+};
+
+// function to write HTML file
+function writeToFile(filePath, team) {
+    fs.writeFile(filePath, team, (err) =>
+        err ? console.info(err) : console.info('Thank you for answering the questions. Your webpage is ready to view!')
+    );
 };
 
 // function to initialize program
