@@ -1,0 +1,29 @@
+.team-heading {
+    background-color: aquamarine;
+}
+
+.text-center {
+    color: #2874A6;
+    font-size: 4rem;
+}
+
+.team-area {
+    display: flex;
+    flex-wrap: wrap;
+}
+.employee-card {
+    margin: 20px;
+    width: 300px;
+}
+
+.card-header {
+    background-color: #81D4FA;
+}
+
+.card-title {
+    color: #148F77;
+}
+
+.card-title h2 {
+    font-size: 2rem;
+}
