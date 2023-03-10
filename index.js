@@ -10,9 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-// empty array to push employee objects to and pass to render import
-const finalTeam = [];
-
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
 // questions about a manager
@@ -97,77 +94,94 @@ const internQuestions = [
     },
 ]
 
-// function to create a manager
-function createManager() {
-    inquirer
-        .prompt(managerQuestions)
-        .then((managerData) => {
-            // create a manager
-            const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
-            // push manager to final team array
-            finalTeam.push(manager);
-            promptUserNextStep()
-        })
-        .catch(err => {
-            console.log('Error!!', err);
-        })
-};
+class Team {
+    constructor() {
+        // empty array to push employee objects to and pass to render import
+        this.finalTeam = [];
+    }
 
-function promptUserNextStep() {
-    // ask whether to create an engineer, intern or build the team
-    return inquirer.prompt(selectNextChoice)
-        .then(userSelection => {
-            // switch statement prompts a set of question or writes the html file depending on choice made
-            switch (userSelection.choice) {
-                case "Add an engineer":
-                    // prompts a set of questions for an engineer
-                    createEngineer();
-                    break;
-                case "Add an intern":
-                    // prompts a set of questions for an intern
-                    createIntern();
-                    break;
-                default:
-                    // writes html file when the user finishes building their team
-                    // passes final team to the render import
-                    writeToFile(outputPath, render(finalTeam));
-                    break;
-            }
-        })
-};
+    // initialize the program
+    startBuild() {
+        console.info("Welcome! Please start by entering the Manager information.");
+        this.createManager();
+    }
 
-// function to create an engineer
-function createEngineer() {
-    inquirer.prompt(engineerQuestions)
-        .then(engineerData => {
-            // create your engineer
-            const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
-            finalTeam.push(engineer);
-            promptUserNextStep();
-        })
-};
+    // create a new manager
+    createManager() {
+        inquirer
+            .prompt(managerQuestions)
+            .then((managerData) => {
+                // create a manager object
+                const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
+                // push manager orbject to final team array
+                this.finalTeam.push(manager);
+                this.promptUserNextStep()
+            })
+            .catch(err => {
+                console.info("Error!!", err);
+            })
+    }
 
-// function to create intern
-function createIntern() {
-    inquirer.prompt(internQuestions)
-        .then(internData => {
-            // create your engineer
-            const intern = new Intern(internData.name, internData.id, internData.email, internData.school);
-            finalTeam.push(intern);
-            promptUserNextStep();
-        })
-};
+    promptUserNextStep() {
+        // ask whether to create an engineer, intern or build the team
+        return inquirer
+            .prompt(selectNextChoice)
+            .then(userSelection => {
+                // switch statement prompts a set of question or writes the html file depending on choice made
+                switch (userSelection.choice) {
+                    case "Add an engineer":
+                        // prompts a set of questions for an engineer
+                        this.createEngineer();
+                        break;
+                    case "Add an intern":
+                        // prompts a set of questions for an intern
+                        this.createIntern();
+                        break;
+                    default:
+                        // writes html file when the user finishes building their team
+                        // passes final team to the render import
+                        this.writeToFile(outputPath, render(this.finalTeam));
+                        break;
+                }
+            })
+            .catch(err => {
+                console.info("Error!!", err);
+            })
+    }
 
-// function to write HTML file
-function writeToFile(filePath, team) {
-    fs.writeFile(filePath, team, (err) =>
-        err ? console.info(err) : console.info('Thank you for answering the questions. Your webpage is ready to view!')
-    );
-};
+    // function to create an engineer
+    createEngineer() {
+        inquirer.prompt(engineerQuestions)
+            .then(engineerData => {
+                // create your engineer
+                const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
+                this.finalTeam.push(engineer);
+                this.promptUserNextStep();
+            })
+    }
 
-// function to initialize program
-function init() {
-    createManager();
-};
+    // function to create intern
+    createIntern() {
+        inquirer.prompt(internQuestions)
+            .then(internData => {
+                // create your engineer
+                const intern = new Intern(internData.name, internData.id, internData.email, internData.school);
+                this.finalTeam.push(intern);
+                this.promptUserNextStep();
+            })
+    }
 
-init();
+    // function to write HTML file
+    writeToFile(filePath, team) {
+        fs.writeFile(filePath, team, (err) =>
+            err ? console.info(err) : console.info("Thank you for answering the questions. Your webpage is ready to view!")
+        );
+    }
+
+}
+
+// Initialize a new Team object
+const team = new Team();
+
+// Build the team
+team.startBuild();
