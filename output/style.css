@@ -11,6 +11,7 @@
     display: flex;
     flex-wrap: wrap;
 }
+
 .employee-card {
     margin: 20px;
     width: 300px;
